@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Stove by sethvargo</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Stove</h1>
+        <h2>A utility for packaging and releasing Chef cookbooks</h2>
+        <a href="https://github.com/sethvargo/stove" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="stove" class="anchor" href="#stove"><span class="octicon octicon-link"></span></a>Stove</h1>
+
+<p><a href="http://badge.fury.io/rb/stove"><img src="https://badge.fury.io/rb/stove.png" alt="Gem Version"></a>
+<a href="https://travis-ci.org/sethvargo/stove"><img src="https://travis-ci.org/sethvargo/stove.png?branch=master" alt="Build Status"></a>
+<a href="https://gemnasium.com/sethvargo/stove"><img src="https://gemnasium.com/sethvargo/stove.png" alt="Dependency Status"></a>
+<a href="https://codeclimate.com/github/sethvargo/stove"><img src="https://codeclimate.com/github/sethvargo/stove.png" alt="Code Climate"></a></p>
+
+<p>A utility for releasing and managing Chef Cookbooks. It will:</p>
+
+<ul>
+<li>Edit the <code>metadata.rb</code> and insert the proper version</li>
+<li>Create a CHANGELOG from JIRA tickets</li>
+<li>Commit and push these changes to git</li>
+<li>Create a git tag and push those changes to git</li>
+<li>Publish a release to GitHub releases</li>
+<li>Upload the cookbook to the Opscode Community Site</li>
+<li>Resolve (close) the JIRA tickets</li>
+</ul><h2>
+<a name="why" class="anchor" href="#why"><span class="octicon octicon-link"></span></a>Why?</h2>
+
+<p>Existing tools to package cookbooks (such as <a href="https://github.com/miketheman/knife-community">Knife Community</a> and <code>knife cookbook site share</code>) require a dependency on Chef. Because of thier dependency on Chef, they enforce the use of a "cookbook repo". Especially with the evolution of <a href="https://github.com/RiotGames/berkshelf">Berkshelf</a>, cookbooks are individualized artifacts and are often contained in their own repositories. <a href="https://github.com/sethvargo/stove">stove</a> is <strong>cookbook-centric, rather than Chef-centric</strong>. Since all commands are run from inside the cookbook, it's safe to include stove in your cookbooks <code>Gemfile</code>.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>It is highly recommended that you include <code>stove</code> in your cookbook's Gemfile:</p>
+
+<div class="highlight highlight-ruby"><pre><span class="n">gem</span> <span class="s1">'stove'</span>
+</pre></div>
+
+<p>Alternatively, you may install it as a gem:</p>
+
+<pre><code>$ gem install stove
+</code></pre>
+
+<p>Create a special JIRA credentials file at '~/.stove' that has the following JSON:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="p">{</span>
+  <span class="s2">"jira_username"</span><span class="o">:</span> <span class="s2">"JIRA_USERNAME"</span><span class="p">,</span>
+  <span class="s2">"jira_password"</span><span class="o">:</span> <span class="s2">"JIRA_PASSWORD"</span><span class="p">,</span>
+  <span class="s2">"opscode_username"</span><span class="o">:</span> <span class="s2">"OPSCODE_USERNAME"</span><span class="p">,</span>
+  <span class="s2">"opscode_pem_file"</span><span class="o">:</span> <span class="s2">"OPSCODE_PEM_FILE"</span><span class="p">,</span>
+  <span class="s2">"github_access_token"</span><span class="o">:</span> <span class="s2">"PERSONAL_API_TOKEN"</span>
+<span class="p">}</span>
+</pre></div>
+
+<ul>
+<li>
+<code>jira_username</code> - The username used to login to Opscode's JIRA</li>
+<li>
+<code>jira_password</code> - The password used to login to Opscode's JIRA</li>
+<li>
+<code>opscode_username</code> - The username used to login to Opscode's Community Site</li>
+<li>
+<code>opscode_password</code> - The password used to login to Opscode's Community Site</li>
+<li>
+<code>github_access_token</code> - Your personal access token for the GitHub API</li>
+</ul><p>For example:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="p">{</span>
+  <span class="s2">"jira_username"</span><span class="o">:</span> <span class="s2">"sethvargo"</span><span class="p">,</span>
+  <span class="s2">"jira_password"</span><span class="o">:</span> <span class="s2">"bAc0ñ"</span><span class="p">,</span>
+  <span class="s2">"opscode_username"</span><span class="o">:</span> <span class="s2">"sethvargo"</span><span class="p">,</span>
+  <span class="s2">"opscode_pem_file"</span><span class="o">:</span> <span class="s2">"~/.chef/sethvargo.pem"</span><span class="p">,</span>
+  <span class="s2">"github_access_token"</span><span class="o">:</span> <span class="s2">"abcdefg1234567"</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>The gem is packaged as a binary. It should be run from <em>inside the cookbook to release</em>:</p>
+
+<pre><code>(~/cookbooks/bacon) $ bake 1.2.3
+</code></pre>
+
+<div class="highlight highlight-text"><pre>Usage: bake x.y.z
+    -l, --log-level [LEVEL]          Ruby log level
+    -c, --category [CATEGORY]        The category for the cookbook (optional for existing cookbooks)
+    -p, --path [PATH]                The path to the cookbook to release (default: PWD)
+        --[no-]git                   Automatically tag and push to git (default: true)
+        --[no-]github                Automatically release to GitHub (default: true)
+    -r, --remote                     The name of the git remote to push to
+    -b, --branch                     The name of the git branch to push to
+        --[no-]devodd                Automatically bump the metadata for devodd releases
+        --[no-]jira                  Automatically populate the CHANGELOG from JIRA tickets and close them (default: false)
+        --[no-]upload                Upload the cookbook to the Opscode Community Site (default: true)
+        --[no-]changelog             Automatically generate a CHANGELOG (default: true)
+    -h, --help                       Show this message
+    -v, --version                    Show version
+</pre></div>
+
+<h2>
+<a name="rake-task" class="anchor" href="#rake-task"><span class="octicon octicon-link"></span></a>Rake Task</h2>
+
+<p>Stove also includes a Rake task you can include in your Rakefile:</p>
+
+<div class="highlight highlight-ruby"><pre><span class="nb">require</span> <span class="s1">'stove/rake_task'</span>
+
+<span class="ss">Stove</span><span class="p">:</span><span class="ss">:RakeTask</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">stove</span><span class="o">|</span>
+  <span class="n">stove</span><span class="o">.</span><span class="n">git</span> <span class="o">=</span> <span class="kp">true</span>
+  <span class="n">stove</span><span class="o">.</span><span class="n">devodd</span> <span class="o">=</span> <span class="kp">true</span>
+<span class="k">end</span>
+</pre></div>
+
+<h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<ol>
+<li>Fork it</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create new Pull Request</li>
+</ol><p>TODO:</p>
+
+<ul>
+<li>Secure the authentication file</li>
+</ul><h2>
+<a name="see-also" class="anchor" href="#see-also"><span class="octicon octicon-link"></span></a>See Also</h2>
+
+<ul>
+<li><a href="https://github.com/miketheman/knife-community">Knife Community</a></li>
+<li><a href="https://github.com/fnichol/emeril">Emeril</a></li>
+</ul><h2>
+<a name="license--authors" class="anchor" href="#license--authors"><span class="octicon octicon-link"></span></a>License &amp; Authors</h2>
+
+<ul>
+<li>Author: Seth Vargo (<a href="mailto:sethvargo@gmail.com">sethvargo@gmail.com</a>)</li>
+</ul><div class="highlight highlight-text"><pre>Copyright 2013 Seth Vargo &lt;sethvargo@gmail.com&gt;
+Copyright 2013 Opscode, Inc
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+</pre></div>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/sethvargo/stove/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/sethvargo/stove/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/sethvargo/stove"></a> is maintained by <a href="https://github.com/sethvargo">sethvargo</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>

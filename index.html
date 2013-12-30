@@ -1,34 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <title>Stove by sethvargo</title>
 
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
-    <title>Stove by sethvargo</title>
   </head>
-
   <body>
-    <header>
-      <div class="inner">
-        <h1>Stove</h1>
-        <h2>A utility for packaging and releasing Chef cookbooks</h2>
-        <a href="https://github.com/sethvargo/stove" class="button"><small>View project on</small>GitHub</a>
-      </div>
-    </header>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Stove</h1>
+        <p class="header">A utility for packaging and releasing Chef cookbooks</p>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/sethvargo/stove/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/sethvargo/stove/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/sethvargo/stove">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/sethvargo">sethvargo</a></p>
+
+
+      </header>
+      <section>
+        <h1>
 <a name="stove" class="anchor" href="#stove"><span class="octicon octicon-link"></span></a>Stove</h1>
 
 <p><a href="http://badge.fury.io/rb/stove"><img src="https://badge.fury.io/rb/stove.png" alt="Gem Version"></a>
@@ -64,38 +66,35 @@
 <pre><code>$ gem install stove
 </code></pre>
 
-<p>Create a special JIRA credentials file at '~/.stove' that has the following JSON:</p>
+<p>The use of some plugins (such as GitHub and JIRA) require a Stove configuration file. The Stove config is a JSON file stored at <code>~/.stove</code> on your local hard drive. The schema looks like this:</p>
 
 <div class="highlight highlight-javascript"><pre><span class="p">{</span>
-  <span class="s2">"jira_username"</span><span class="o">:</span> <span class="s2">"JIRA_USERNAME"</span><span class="p">,</span>
-  <span class="s2">"jira_password"</span><span class="o">:</span> <span class="s2">"JIRA_PASSWORD"</span><span class="p">,</span>
-  <span class="s2">"opscode_username"</span><span class="o">:</span> <span class="s2">"OPSCODE_USERNAME"</span><span class="p">,</span>
-  <span class="s2">"opscode_pem_file"</span><span class="o">:</span> <span class="s2">"OPSCODE_PEM_FILE"</span><span class="p">,</span>
-  <span class="s2">"github_access_token"</span><span class="o">:</span> <span class="s2">"PERSONAL_API_TOKEN"</span>
+  <span class="s2">"field"</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">"option"</span><span class="o">:</span> <span class="s2">"value"</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 
-<ul>
-<li>
-<code>jira_username</code> - The username used to login to Opscode's JIRA</li>
-<li>
-<code>jira_password</code> - The password used to login to Opscode's JIRA</li>
-<li>
-<code>opscode_username</code> - The username used to login to Opscode's Community Site</li>
-<li>
-<code>opscode_password</code> - The password used to login to Opscode's Community Site</li>
-<li>
-<code>github_access_token</code> - Your personal access token for the GitHub API</li>
-</ul><p>For example:</p>
+<p>For example, my local Stove configuration looks like this:</p>
 
 <div class="highlight highlight-javascript"><pre><span class="p">{</span>
-  <span class="s2">"jira_username"</span><span class="o">:</span> <span class="s2">"sethvargo"</span><span class="p">,</span>
-  <span class="s2">"jira_password"</span><span class="o">:</span> <span class="s2">"bAc0ñ"</span><span class="p">,</span>
-  <span class="s2">"opscode_username"</span><span class="o">:</span> <span class="s2">"sethvargo"</span><span class="p">,</span>
-  <span class="s2">"opscode_pem_file"</span><span class="o">:</span> <span class="s2">"~/.chef/sethvargo.pem"</span><span class="p">,</span>
-  <span class="s2">"github_access_token"</span><span class="o">:</span> <span class="s2">"abcdefg1234567"</span>
+  <span class="s2">"community"</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">"username"</span><span class="o">:</span> <span class="s2">"sethvargo"</span><span class="p">,</span>
+    <span class="s2">"key"</span><span class="o">:</span> <span class="s2">"~/.chef/sethvargo.pem"</span>
+  <span class="p">},</span>
+  <span class="s2">"github"</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">"access_token"</span><span class="o">:</span> <span class="s2">"..."</span>
+  <span class="p">},</span>
+  <span class="s2">"jira"</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">"username"</span><span class="o">:</span> <span class="s2">"sethvargo"</span><span class="p">,</span>
+    <span class="s2">"password"</span><span class="o">:</span> <span class="s2">"..."</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
+
+<p>If you are using Stove 1.0, you need to update your configuration file syntax.</p>
+
+<p><strong>It is recommended that the permissions on this file be 0600 to prevent unauthorized reading!</strong></p>
 
 <h2>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
@@ -105,18 +104,28 @@
 <pre><code>(~/cookbooks/bacon) $ bake 1.2.3
 </code></pre>
 
+<p>You can always use the <code>--help</code> flag to get information:</p>
+
 <div class="highlight highlight-text"><pre>Usage: bake x.y.z
-    -l, --log-level [LEVEL]          Ruby log level
-    -c, --category [CATEGORY]        The category for the cookbook (optional for existing cookbooks)
-    -p, --path [PATH]                The path to the cookbook to release (default: PWD)
-        --[no-]git                   Automatically tag and push to git (default: true)
-        --[no-]github                Automatically release to GitHub (default: true)
-    -r, --remote                     The name of the git remote to push to
-    -b, --branch                     The name of the git branch to push to
-        --[no-]devodd                Automatically bump the metadata for devodd releases
-        --[no-]jira                  Automatically populate the CHANGELOG from JIRA tickets and close them (default: false)
-        --[no-]upload                Upload the cookbook to the Opscode Community Site (default: true)
-        --[no-]changelog             Automatically generate a CHANGELOG (default: true)
+
+Actions:
+        --no-bump                    Perform a version bump the local version automatically
+        --no-changelog               Generate and prompt for a CHANGELOG
+        --no-dev                     Bump a minor version release for development purposes
+        --no-upload                  Upload the cookbook to the community site
+
+Plugins:
+        --no-git                     Tag and push to a git remote
+        --no-github                  Publish the release to GitHub
+        --no-jira                    Resolve JIRA issues
+
+Global Options:
+        --locale [LANGUAGE]          Change the language to output messages
+        --log-level [LEVEL]          Set the log verbosity
+        --category [CATEGORY]        Set category for the cookbook
+        --path [PATH]                Change the path to a cookbook
+        --remote [REMOTE]            The name of the git remote to push to
+        --branch [BRANCH]            The name of the git branch to push to
     -h, --help                       Show this message
     -v, --version                    Show version
 </pre></div>
@@ -128,7 +137,7 @@
 
 <div class="highlight highlight-ruby"><pre><span class="nb">require</span> <span class="s1">'stove/rake_task'</span>
 
-<span class="ss">Stove</span><span class="p">:</span><span class="ss">:RakeTask</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">stove</span><span class="o">|</span>
+<span class="no">Stove</span><span class="o">::</span><span class="no">RakeTask</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">stove</span><span class="o">|</span>
   <span class="n">stove</span><span class="o">.</span><span class="n">git</span> <span class="o">=</span> <span class="kp">true</span>
   <span class="n">stove</span><span class="o">.</span><span class="n">devodd</span> <span class="o">=</span> <span class="kp">true</span>
 <span class="k">end</span>
@@ -173,26 +182,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 </pre></div>
-        </section>
-
-        <aside id="sidebar">
-          <a href="https://github.com/sethvargo/stove/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/sethvargo/stove/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/sethvargo/stove"></a> is maintained by <a href="https://github.com/sethvargo">sethvargo</a>.</p>
-
-          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
     </div>
-
-            <script type="text/javascript">
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		          <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>

@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   # Runtime dependencies
-  spec.add_dependency 'faraday',               '~> 0.8.9'
+  spec.add_dependency 'faraday',               '~> 0.9.0'
   spec.add_dependency 'faraday_middleware',    '~> 0.9.0'
   spec.add_dependency 'i18n',                  '~> 0.6'
 
